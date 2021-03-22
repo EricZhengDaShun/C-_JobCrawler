@@ -12,10 +12,22 @@ namespace JobCrawler.Configure
         public int PageNum { get; set; }
     }
 
+    public class FilterSwitch
+    {
+        public bool ToolEnable { get; set; }
+        public bool TitleEnable { get; set; }
+    }
+
     public class Tool
     {
-        public List<string> IncludeTools { get; set; }
-        public List<string> ExcludeTools { get; set; }
+        public List<string> Include { get; set; }
+        public List<string> Exclude { get; set; }
+    }
+
+    public class Title 
+    {
+        public List<string> Include { get; set; }
+        public List<string> Exclude { get; set; }
     }
 
     public class JobLinkTag

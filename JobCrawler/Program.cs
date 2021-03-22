@@ -59,7 +59,10 @@ namespace JobCrawler
                 , configureLoader.Salary);
             jobAnalysis.Analysis();
 
-            var jobFilter = new JobFilter(jobAnalysis.JobInfos, configureLoader.Tool);
+            var jobFilter = new JobFilter(jobAnalysis.JobInfos
+                , configureLoader.FilterSwitch
+                , configureLoader.Tool
+                , configureLoader.Title);
             jobFilter.Filter();
 
 
