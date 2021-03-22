@@ -28,11 +28,11 @@ namespace JobCrawler
             while (JobItemHtml.TryDequeue(out WebInfo webInfo))
             {
                 htmlDocument.LoadHtml(webInfo.Html);
-                JobLinks = (from node in htmlDocument.DocumentNode.Descendants()
+                JobLinks.AddRange((from node in htmlDocument.DocumentNode.Descendants()
                             where node.Name == JobLinkTag.Type &&
                             node.Attributes[JobLinkTag.ContentAttribute] != null &&
                             node.Attributes[JobLinkTag.AttributeName]?.Value == JobLinkTag.AttributeValue
-                            select "https:" + node.Attributes[JobLinkTag.ContentAttribute].Value).ToList();
+                            select "https:" + node.Attributes[JobLinkTag.ContentAttribute].Value).ToList());
             }
         }
     }
