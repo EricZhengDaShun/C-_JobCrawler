@@ -18,6 +18,8 @@ namespace JobCrawler
         public Configure.DataSetting DataSetting { get; set; }
         public Configure.FilterSwitch FilterSwitch { get; set; }
         public Configure.Title Title { get; set; }
+        public Configure.JobContent JobContent { get; set; }
+        public Configure.Content Content { get; set;}
 
         public void Load(string fileName)
         {
@@ -54,6 +56,12 @@ namespace JobCrawler
 
             section = config.GetSection(nameof(Configure.Title));
             Title = section.Get<Configure.Title>();
+
+            section = config.GetSection("htmlTag:" + nameof(Configure.JobContent));
+            JobContent = section.Get<Configure.JobContent>();
+
+            section = config.GetSection(nameof(Configure.Content));
+            Content = section.Get<Configure.Content>();
         }
     }
 }

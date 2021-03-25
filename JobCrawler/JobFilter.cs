@@ -13,16 +13,19 @@ namespace JobCrawler
         public List<JobInfo> PassJobInfos { get; private set; } = new();
         public Configure.FilterSwitch FilterSwitch { get; set; }
         public Configure.Title Title { get; private set; }
+        public Configure.Content Content { get; private set; }
 
         public JobFilter(List<JobInfo> jobInfos
             , Configure.FilterSwitch filterSwitch
             , Configure.Tool tool
-            , Configure.Title title)
+            , Configure.Title title
+            , Configure.Content content)
         {
             JobInfos = jobInfos;
             FilterSwitch = filterSwitch;
             Tool = tool;
             Title = title;
+            Content = content;
         }
 
         public void Filter()
@@ -30,6 +33,7 @@ namespace JobCrawler
             PassJobInfos = new List<JobInfo>(JobInfos);
             if (FilterSwitch.ToolEnable) ToolFilter();
             if (FilterSwitch.TitleEnable) TitleFilter();
+            if (FilterSwitch.ContentEnable) ContenFilter();
         }
 
         private void ToolFilter()
@@ -58,6 +62,23 @@ namespace JobCrawler
                 {
                     if (x == string.Empty) return true;
                     return (!info.Title.Contains(x, StringComparison.InvariantCultureIgnoreCase));
+                })) return;
+                fliterResult.Add(info);
+            });
+            PassJobInfos = fliterResult;
+        }
+
+        private void ContenFilter()
+        {
+            var fliterResult = new List<JobInfo>();
+            PassJobInfos.ForEach(info =>
+            {
+                if (info.JobContent is null) return;
+                if (!Content.Include.All(x => info.JobContent.Contains(x, StringComparison.InvariantCultureIgnoreCase))) return;
+                if (!Content.Exclude.All(x =>
+                {
+                    if (x == string.Empty) return true;
+                    return (!info.JobContent.Contains(x, StringComparison.InvariantCultureIgnoreCase));
                 })) return;
                 fliterResult.Add(info);
             });

@@ -16,6 +16,7 @@ namespace JobCrawler.Configure
     {
         public bool ToolEnable { get; set; }
         public bool TitleEnable { get; set; }
+        public bool ContentEnable { get; set; }
     }
 
     public class Tool
@@ -25,6 +26,12 @@ namespace JobCrawler.Configure
     }
 
     public class Title 
+    {
+        public List<string> Include { get; set; }
+        public List<string> Exclude { get; set; }
+    }
+
+    public class Content
     {
         public List<string> Include { get; set; }
         public List<string> Exclude { get; set; }
@@ -65,5 +72,12 @@ namespace JobCrawler.Configure
         public bool UseFile { get; set; }
         public bool SaveData { get; set; }
         public string FilePath { get; set; }
+    }
+
+    public class JobContent
+    {
+        public string Type { get; set; }
+        public string AttributeName { get; set; }
+        public string AttributeValue { get; set; }
     }
 }

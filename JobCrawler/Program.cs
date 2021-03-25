@@ -56,13 +56,15 @@ namespace JobCrawler
             var jobAnalysis = new JobAnalysis(jobInfoRawData
                 , configureLoader.JobTitle
                 , configureLoader.ToolHTML
-                , configureLoader.Salary);
+                , configureLoader.Salary
+                , configureLoader.JobContent);
             jobAnalysis.Analysis();
 
             var jobFilter = new JobFilter(jobAnalysis.JobInfos
                 , configureLoader.FilterSwitch
                 , configureLoader.Tool
-                , configureLoader.Title);
+                , configureLoader.Title
+                , configureLoader.Content);
             jobFilter.Filter();
 
 

@@ -13,6 +13,7 @@ namespace JobCrawler
         public string Title { get; set; }
         public List<string> Tools { get; set; }
         public string Salary { get; set; }
+        public string JobContent { get; set; }
     }
 
     public class JobAnalysis
@@ -21,6 +22,7 @@ namespace JobCrawler
         public Configure.JobTitle JobTitleSetting { get; private set; }
         public Configure.ToolHTML ToolHTMLSetting { get; private set; }
         public Configure.Salary SalarySetting { get; private set; }
+        public Configure.JobContent JobContent { get; private set; }
         public List<WebInfo> JobInfoRawData { get; private set; }
 
         private readonly HtmlDocument htmlDocument = new();
@@ -28,12 +30,14 @@ namespace JobCrawler
         public JobAnalysis(List<WebInfo> jobInfoRawData
             , Configure.JobTitle jobTitle
             , Configure.ToolHTML toolHTML
-            , Configure.Salary salary)
+            , Configure.Salary salary
+            , Configure.JobContent jobContent)
         {
             JobInfoRawData = jobInfoRawData;
             JobTitleSetting = jobTitle;
             ToolHTMLSetting = toolHTML;
             SalarySetting = salary;
+            JobContent = jobContent;
         }
 
         public void Analysis()
@@ -61,6 +65,11 @@ namespace JobCrawler
                                   where node.Name == SalarySetting.Type &&
                                   node.Attributes[SalarySetting.AttributeName]?.Value == SalarySetting.AttributeValue
                                   select node.InnerHtml).ToList().FirstOrDefault();
+
+                jobInfo.JobContent = (from node in htmlDocument.DocumentNode.Descendants()
+                                      where node.Name == JobContent.Type &&
+                                      node.Attributes[JobContent.AttributeName]?.Value == JobContent.AttributeValue
+                                      select node.InnerHtml).ToList().FirstOrDefault();
 
                 JobInfos.Add(jobInfo);
             }

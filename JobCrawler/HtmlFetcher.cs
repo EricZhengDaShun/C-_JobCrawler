@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
@@ -12,22 +13,49 @@ namespace JobCrawler
 
         public HtmlFetcher()
         {
-            var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArguments("headless");
-            driver = new ChromeDriver(chromeOptions);
+            try
+            {
+                var chromeOptions = new ChromeOptions();
+                chromeOptions.AddArguments("headless");
+                driver = new ChromeDriver(chromeOptions);
+            }
+            catch (WebDriverException e)
+            {
+                Console.WriteLine("WebDriverException: " + e.Message);
+            }
         }
 
         public void Dispose()
         {
-            driver.Close();
-            driver.Quit();
+            if (driver is not null)
+            {
+                driver.Close();
+                driver.Quit();
+            }
             GC.SuppressFinalize(this);
         }
 
         public string LoadUrl(string url)
         {
-            driver.Navigate().GoToUrl(url);
-            return driver.PageSource;
+            int currentRetry = 0;
+            string result = "";
+            while (currentRetry < 2)
+            {
+                try
+                {
+                    driver.Navigate().GoToUrl(url);
+                    result = driver.PageSource;
+                    break;
+                }
+                catch (WebDriverException e)
+                {
+                    Console.WriteLine("WebDriverException: " + e.Message);
+                    ++currentRetry;
+                    Thread.Sleep(500);
+                    continue;
+                }
+            }
+            return result;
         }
     }
 }
